@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factura</title>
+    <style>
+        /* Estilos generales */
+        body {
+            margin: 0;
+            box-sizing: border-box;
+            background: linear-gradient(to right,  #e1cdc8,  #0a215c);
+            color: #2d4059;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+        }
+        .container {
+            width: 90%;
+            max-width: 900px;
+            background-color: rgba(240, 242, 247, 0.584);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 1s ease-in-out;
+        }
+        h1 {
+            color: #1c3d5a;
+            font-size: 2rem;
+            font-weight: bold;
+            text-align: center;
+        }
+        /* Animación de entrada */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Estilos de encabezados */
+        .encabezado-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .encabezado1 {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            text-align: left;
+            background-color: #eaeff6;
+            padding: 10px;
+            border-radius: 20px;
+            display: grid;
+            grid-template-columns: 0.5fr 1fr;
+        }
+        .razon_social {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+            text-align: center;
+        }
+
+        .razon_social img {
+            margin: 0 auto;
+            width: 100px;
+            height: auto;
+            background: none; /* Asegura que el fondo de la imagen sea transparente */
+            border-radius: 50%; /* Opcional: redondea la imagen */
+        }
+
+        .razon_social p {
+            font-size: 1rem;
+            color: #1c3d5a;
+            margin: 0;
+            text-align: center;
+        }
+
+        .encabezado2 {
+            background-color: #ebeff4;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.05);
+            display: grid;
+            grid-template-columns: 1fr 5fr;
+            column-gap: 15px;
+            row-gap: 10px;
+        }
+        label {
+            font-weight: bold;
+            color: #374f63;
+        }
+        table label{
+            width: 10%;
+        }
+        table input{
+            width: 80%;
+        }
+
+        input[type="text"], input[type="email"], input[type="number"], input[type="date"], select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #d3dce0;
+            border-radius: 8px;
+            font-size: 1rem;
+            box-sizing: border-box;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            border-color: #87a8d0;
+            outline: none;
+            box-shadow: 0 0 5px rgba(135, 168, 208, 0.4);
+        }
+
+        /* Estilos de tabla */
+        .table-bordered {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            border: 1px solid #d3dce0;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .table-bordered th, .table-bordered td {
+            padding: 12px;
+            text-align: center;
+            font-size: 0.9rem;
+            border: 1px solid #d3dce0;
+        }
+
+        .table-bordered th {
+            background-color: #4d98c6;
+            color: #1c3d5a;
+            font-weight: bold;
+        }
+
+        .table-bordered td {
+            background-color: #ffffff;
+        }
+
+        .table-bordered input[type="number"] {
+            width: 90%;
+            padding: 8px;
+            border: 1px solid #d3dce0;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        /* Estilo del total */
+        .table-bordered tr:last-child th, .table-bordered tr:last-child td {
+            font-weight: bold;
+            background-color: #eef3f8;
+            color: #2d4059;
+        }
+
+        /* Botones de acción */
+        button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 20px;
+            font-size: 1rem;
+            color: #ffffff;
+            background-color: #87a8d0;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #6d96c3;
+        }
+        .btn-total{
+            width: 50%;
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <form action="procesar.php" method="get" onsubmit="return validarFormulario()">
+            <div class="encabezado-container">
+                <div class="encabezado1">
+                    <label>Nro Venta</label>
+                    <input type="number" id="nroVenta" min="0" required>
+                    <label>Fecha</label>
+                    <input type="date" id="fecha" required>
+                </div>
+                <div class="razon_social">
+                    <img src="images/logo.jpg">
+                    <br>
+                    <p>Empresa Tech Shop S.A.<br>Servicio de tecnología</p>
+                </div>
+            </div>
+            <h1>Factura</h1>
+            <div class="encabezado2">
+                <label>Cliente</label>
+                <input type="text" id="cliente" placeholder="Ingrese el nombre del cliente" required>
+                <label>Teléfono</label>
+                <input type="text" id="telefono" placeholder="Ingrese el número de teléfono" required>
+                <label>Email</label>
+                <input type="email" id="email" placeholder="Ingrese el email del cliente" required>
+                <label>Dirección</label>
+                <input type="text" id="direccion" placeholder="Ingrese la dirección del cliente" required>
+            </div>
+        </form>
+        
+        <table class="table-bordered">
+            <tr>
+                <th width="15%">CANTIDAD</th>
+                <th width="55%">DESCRIPCIÓN</th>
+                <th width="15%">PRECIO UNITARIO</th>
+                <th width="15%">SUBTOTAL</th>
+            </tr>
+            <tr>
+                <td><input type="number" id="cantidad1" oninput="calcularSubtotal(1)" min="0" value="0"></td>
+                <td>
+                    <select id="prod1" onchange="mostrar(1)">
+                        <option>Seleccione su producto...</option>
+                        <option value="P1" data-precio="4900.00">Portátil HP</option>
+                        <option value="P2" data-precio="1800.00">Monitor Curvo</option>
+                        <option value="P3" data-precio="5870.00">Ordenador PcCom</option>
+                        <option value="P4" data-precio="190.00">Mouse Gaming</option>
+                        <option value="P5" data-precio="175.00">Fuente de Alimentación</option>
+                        <option value="P6" data-precio="190.00">Disco Duro</option>
+                        <option value="P7" data-precio="490.00">Auriculares Gaming</option>
+                        <option value="P8" data-precio="369.99">Teclado Gaming</option>
+                        <option value="P9" data-precio="349.99">Mando Xbox</option>
+                    </select>
+                    <div id="descripcion1"></div>
+                </td>
+                <td><input type="number" id="prec_uni1" readonly></td>
+                <td><input type="number" id="subtotal1" readonly></td>
+            </tr>
+            <tr>
+                <td><input type="number" id="cantidad2" oninput="calcularSubtotal(2)" min="0" value="0"></td>
+                <td>
+                    <select id="prod2" onchange="mostrar(2)">
+                        <option>Seleccione su producto...</option>
+                        <option value="P1" data-precio="4900.00">Portátil HP</option>
+                        <option value="P2" data-precio="1800.00">Monitor Curvo</option>
+                        <option value="P3" data-precio="5870.00">Ordenador PcCom</option>
+                        <option value="P4" data-precio="190.00">Mouse Gaming</option>
+                        <option value="P5" data-precio="175.00">Fuente de Alimentación</option>
+                        <option value="P6" data-precio="190.00">Disco Duro</option>
+                        <option value="P7" data-precio="490.00">Auriculares Gaming</option>
+                        <option value="P8" data-precio="369.99">Teclado Gaming</option>
+                        <option value="P9" data-precio="349.99">Mando Xbox</option>
+                    </select>
+                    <div id="descripcion2"></div>
+                </td>
+                <td><input type="number" id="prec_uni2" readonly></td>
+                <td><input type="number" id="subtotal2" readonly></td>
+            </tr>
+            <tr>
+                <td><input type="number" id="cantidad3" oninput="calcularSubtotal(3)" min="0" value="0"></td>
+                <td>
+                    <select id="prod3" onchange="mostrar(3)">
+                        <option>Seleccione su producto...</option>
+                        <option value="P1" data-precio="4900.00">Portátil HP</option>
+                        <option value="P2" data-precio="1800.00">Monitor Curvo</option>
+                        <option value="P3" data-precio="5870.00">Ordenador PcCom</option>
+                        <option value="P4" data-precio="190.00">Mouse Gaming</option>
+                        <option value="P5" data-precio="175.00">Fuente de Alimentación</option>
+                        <option value="P6" data-precio="190.00">Disco Duro</option>
+                        <option value="P7" data-precio="490.00">Auriculares Gaming</option>
+                        <option value="P8" data-precio="369.99">Teclado Gaming</option>
+                        <option value="P9" data-precio="349.99">Mando Xbox</option>
+                    </select>
+                    <div id="descripcion3"></div>
+                </td>
+                <td><input type="number" id="prec_uni3" readonly></td>
+                <td><input type="number" id="subtotal3" readonly></td>
+            </tr>
+            <tr>
+                <td><input type="number" id="cantidad4" oninput="calcularSubtotal(4)" min="0" value="0"></td>
+                <td>
+                    <select id="prod4" onchange="mostrar(4)">
+                        <option>Seleccione su producto...</option>
+                        <option value="P1" data-precio="4900.00">Portátil HP</option>
+                        <option value="P2" data-precio="1800.00">Monitor Curvo</option>
+                        <option value="P3" data-precio="5870.00">Ordenador PcCom</option>
+                        <option value="P4" data-precio="190.00">Mouse Gaming</option>
+                        <option value="P5" data-precio="175.00">Fuente de Alimentación</option>
+                        <option value="P6" data-precio="190.00">Disco Duro</option>
+                        <option value="P7" data-precio="490.00">Auriculares Gaming</option>
+                        <option value="P8" data-precio="369.99">Teclado Gaming</option>
+                        <option value="P9" data-precio="349.99">Mando Xbox</option>
+                    </select>
+                    <div id="descripcion4"></div>
+                </td>
+                <td><input type="number" id="prec_uni4" readonly></td>
+                <td><input type="number" id="subtotal4" readonly></td>
+            </tr>
+            <tr>
+                <td><input type="number" id="cantidad5" oninput="calcularSubtotal(5)" min="0" value="0"></td>
+                <td>
+                    <select id="prod5" onchange="mostrar(5)">
+                        <option>Seleccione su producto...</option>
+                        <option value="P1" data-precio="4900.00">Portátil HP</option>
+                        <option value="P2" data-precio="1800.00">Monitor Curvo</option>
+                        <option value="P3" data-precio="5870.00">Ordenador PcCom</option>
+                        <option value="P4" data-precio="190.00">Mouse Gaming</option>
+                        <option value="P5" data-precio="175.00">Fuente de Alimentación</option>
+                        <option value="P6" data-precio="190.00">Disco Duro</option>
+                        <option value="P7" data-precio="490.00">Auriculares Gaming</option>
+                        <option value="P8" data-precio="369.99">Teclado Gaming</option>
+                        <option value="P9" data-precio="349.99">Mando Xbox</option>
+                    </select>
+                    <div id="descripcion5"></div>
+                </td>
+                <td><input type="number" id="prec_uni5" readonly></td>
+                <td><input type="number" id="subtotal5" readonly></td>
+            </tr>
+            <tr>
+                <td colspan="2">
+                    <button class="btn-total" onclick="calcularTotal()">CALCULAR TOTAL</button>
+                </td>
+                <td style="text-align: right;">TOTAL:</td>
+                <td><input type="number" id="total" value="0" readonly></td>
+            </tr>
+        </table>
+        <button class="btn-print" onclick="window.print()">IMPRIMIR</button>
+    </div>
+</body>
+
+<script>
+    function validarFormulario() {
+        const nroVenta = document.getElementById("nroVenta").value;
+        const fecha = document.getElementById("fecha").value;
+        const cliente = document.getElementById("cliente").value;
+        const telefono = document.getElementById("telefono").value;
+        const email = document.getElementById("email").value;
+        const direccion = document.getElementById("direccion").value;
+
+        if (nroVenta < 0) {
+            alert("El numero de evnta es obligatorio.");
+            return false;
+        }
+
+        if (!fecha) {
+            alert("La fecha es obligatoria.");
+            return false;
+        }
+
+        if (cliente.length < 4) {
+            alert("El nombre del cliente debe tener al menos 4 caracteres.");
+            return false;
+        }
+
+        const telefonoRegex = /^[0-9]{7,15}$/;
+        if (!telefonoRegex.test(telefono)) {
+            alert("El teléfono debe contener solo números y tener entre 7 y 15 dígitos.");
+            return false;
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            alert("Por favor, ingrese un email válido.");
+            return false;
+        }
+
+        if (direccion.length < 5) {
+            alert("La dirección debe tener al menos 5 caracteres.");
+            return false;
+        }
+
+        return true;
+    }
+    function calcularSubtotal(fila) {
+        const cantidad = parseFloat(document.getElementById("cantidad" + fila).value) || 0;
+        const precioUnitario = parseFloat(document.getElementById("prec_uni" + fila).value) || 0;
+        const subtotal = cantidad * precioUnitario;
+
+        document.getElementById("subtotal" + fila).value = subtotal.toFixed(2);
+
+        // Calcular el total general
+        //calcularTotal();
+    }
+
+    function calcularTotal() {
+        validarFormulario();
+        let total = 0;
+        for (let i = 1; i <= 2; i++) { // Cambia el límite según el número de filas
+            const subtotal = parseFloat(document.getElementById("subtotal" + i).value) || 0;
+            total += subtotal;
+        }
+        document.getElementById("total").value = total.toFixed(2);
+    }
+
+    function mostrar(fila) {
+        const producto = document.getElementById("prod" + fila);
+        const precio = producto.options[producto.selectedIndex].getAttribute("data-precio");
+
+        // Asignar el precio unitario al campo correspondiente
+        document.getElementById("prec_uni" + fila).value = precio ? parseFloat(precio).toFixed(2) : 0;
+        
+        // Mostrar la descripción del producto seleccionado
+        let descripcion = "";
+        switch (producto.value) {
+            case "P1":
+                descripcion ="<table>"+
+                            '<tr><td rowspan="3"><img src="images/portatil.webp" width="120px">'+
+                            "</td><td>Color: Silver, Black, White</td></tr>"+
+                            '<tr><td>HP 15-FD0079NS Intel Core i5-1334U/16GB/1TB SSD/15.6"</td></tr>'+
+                            "<tr><td>Bs 4900,00</td></tr>"+
+                            "</table>";
+                break;
+            case "P2":
+                descripcion = "<table>"+
+                            '<tr><td rowspan="3"><img src="images/monitor.webp" width="120px">'+
+                            "</td><td>Color: Silver, Black</td></tr>"+
+                            '<tr><td>MSI G27C4X 27" LED FullHD 250Hz FreeSync Premium Curvo</td></tr>'+
+                            "<tr><td>Bs 1800,00</td></tr>"+
+                            "</table>";
+                break;        
+            case "P3":
+                descripcion = "<table>"+
+                            '<tr><td rowspan="3"><img src="images/ordenador.jpg" width="120px">'+
+                            "</td><td>Color: Silver</td></tr>"+
+                            "<tr><td>PcCom Ready Intel Core i5-12400F / 32GB / 1TB SSD / RTX 4060 Ti + Windows 11 Home</td></tr>"+
+                            "<tr><td>Bs 5870,00</td></tr>"+
+                            "</table>";
+                break;       
+            case "P4":
+                descripcion = "<table>"+
+                            '<tr><td rowspan="3"><img src="images/mouse.webp" width="120px">'+
+                            "</td><td>Color: Black</td></tr>"+
+                            "<tr><td>Forgeon Perdition RGB Ratón Gaming 16.000 DPI </td></tr>"+
+                            "<tr><td>Bs 190,00</td></tr>"+
+                            "</table>";
+                break;       
+            case "P5":
+                descripcion = "<table>"+
+                            '<tr><td rowspan="3"><img src="images/fuente.webp" width="120px">'+
+                            "<tr><td>Tempest PSU 750W Fuente de Alimentación </td></tr>"+
+                            "<tr><td>Bs 175,00</td></tr>"+
+                            "</table>";
+                break;       
+            case "P6":
+                descripcion = "<table>"+
+                            '<tr><td rowspan="3"><img src="images/disco.webp" width="120px">'+
+                            '<tr><td>seagate BarraCuda 3.5" 2TB SATA 3</td></tr>'+
+                            "<tr><td>Bs 190,00</td></tr>"+
+                            "</table>";
+                break;       
+            case "P7":
+                descripcion = "<table>"+
+                            '<tr><td rowspan="3"><img src="images/ariculares.webp" width="120px">'+
+                            "</td><td>Color: Silver, blue, Black</td></tr>"+
+                            "<tr><td>Forgeon Sergeant Auriculares Gaming 7.1 PC/PS4/PS5/Xbox/Xbox X/Switch</td></tr>"+
+                            "<tr><td>Bs 490,00</td></tr>"+
+                            "</table>";
+                break;      
+            case "P8":
+                descripcion = "<table>"+
+                            '<tr><td rowspan="3"><img src="images/teclado.webp" width="120px">'+
+                            "</td><td>Color: Black</td></tr>"+
+                            "<tr><td>Forgeon Clutch Teclado Gaming RGB 60% Switch Blue</td></tr>"+
+                            "<tr><td>Bs 369,99</td></tr>"+
+                            "</table>";
+                break;      
+            case "P9":
+                descripcion = "<table>"+
+                            '<tr><td rowspan="3"><img src="images/mando.webp" width="120px">'+
+                            "</td><td>Color: Silver, Black</td></tr>"+
+                            "<tr><td>PDP Mando con Cable Electric Black para Xbox Series X/S/One/PC</td></tr>"+
+                            "<tr><td>Bs 349,99</td></tr>"+
+                            "</table>";
+                break;
+            default:
+                descripcion = "Seleccione un producto válido";
+        }
+        
+        document.getElementById("descripcion"+fila).innerHTML = descripcion;
+        calcularSubtotal(fila);
+    }
+</script>
+</html>
